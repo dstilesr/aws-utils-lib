@@ -1,0 +1,20 @@
+Resources:
+  EC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      KeyName: "US-West-2-key"
+      InstanceType: t2.micro
+      # Amazon Linux 2
+      ImageId: "ami-0e999cbd62129e3b1"
+      SecurityGroups:
+        - !Ref DMZSG
+
+  DMZSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "Enable access on port 22"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: "22"
+          ToPort: "22"
+          CidrIp: 0.0.0.0/0
