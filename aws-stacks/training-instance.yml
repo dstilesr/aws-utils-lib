@@ -93,7 +93,7 @@ Resources:
         KeyName: !Ref KeyNameParameter
         IamInstanceProfile:
           Arn: !GetAtt InstanceProfile.Arn
-        ImageId: "ami-0e999cbd62129e3b1"
+        ImageId: "ami-0a20a878a1c1e5477"
         InstanceType: !Ref InstanceTypeParameter
         SecurityGroups:
           - !Ref InstanceSG
