@@ -17,13 +17,9 @@ Resources:
   EC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:
-      KeyName: !Ref KeyNameParameter
-      InstanceType: t2.micro
-      IamInstanceProfile: !Ref InstanceProfile
-      # Amazon Linux 2
-      ImageId: "ami-0e999cbd62129e3b1"
-      SecurityGroups:
-        - !Ref InstanceSG
+      LaunchTemplate:
+        LaunchTemplateId: !Ref InstanceLaunchTemplate
+        Version: !GetAtt InstanceLaunchTemplate.LatestVersionNumber
 
   InstanceSG:
     Type: "AWS::EC2::SecurityGroup"
@@ -75,7 +71,7 @@ Resources:
                   - "s3:DeleteObjectVersion"
                   - "s3:RestoreObject"
                   - "s3:AbortMultipartUpload"
-                Resource: "arn:aws:s3:::training-instance-*"
+                Resource: !GetAtt StorageBucket.Arn
 
   InstanceProfile:
     Type: "AWS::IAM::InstanceProfile"
@@ -83,3 +79,21 @@ Resources:
       InstanceProfileName: training-instance-profile
       Roles:
         - !Ref InstanceRole
+
+  InstanceLaunchTemplate:
+    Type: "AWS::EC2::LaunchTemplate"
+    Properties:
+      LaunchTemplateName: TrainingInstanceTemplate
+      LaunchTemplateData:
+        KeyName: !Ref KeyNameParameter
+        IamInstanceProfile:
+          Arn: !GetAtt InstanceProfile.Arn
+        ImageId: "ami-0e999cbd62129e3b1"
+        InstanceType: t2.micro
+        SecurityGroups:
+          - !Ref InstanceSG
+        InstanceMarketOptions:
+          MarketType: spot
+          SpotOptions:
+            InstanceInterruptionBehavior: stop
+            SpotInstanceType: persistent
