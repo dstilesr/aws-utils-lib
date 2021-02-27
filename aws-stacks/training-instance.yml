@@ -10,6 +10,11 @@ Parameters:
     Default: US-West-2-key
     Description: Name of key to use to ssh into the instance
 
+  InstanceTypeParameter:
+    Type: String
+    Description: Type of instance to use
+    Default: p2.xlarge
+
 Resources:
   StorageBucket:
     Type: "AWS::S3::Bucket"
@@ -89,7 +94,7 @@ Resources:
         IamInstanceProfile:
           Arn: !GetAtt InstanceProfile.Arn
         ImageId: "ami-0e999cbd62129e3b1"
-        InstanceType: t2.micro
+        InstanceType: !Ref InstanceTypeParameter
         SecurityGroups:
           - !Ref InstanceSG
         InstanceMarketOptions:
