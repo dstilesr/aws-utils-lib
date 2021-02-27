@@ -1,0 +1,88 @@
+Resources:
+  StorageBucket:
+    Type: "AWS::S3::Bucket"
+
+  EC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      KeyName: "US-West-2-key"
+      InstanceType: t2.micro
+      IamInstanceProfile: !Ref InstanceProfile
+      # Amazon Linux 2
+      ImageId: "ami-0e999cbd62129e3b1"
+      SecurityGroups:
+        - !Ref InstanceSG
+
+  InstanceSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "Enable access on port 22"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: "22"
+          ToPort: "22"
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "9000"
+          ToPort: "9000"
+          CidrIp: 0.0.0.0/0
+
+  InstanceRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      RoleName: "training-instance-role"
+      Policies:
+        - PolicyName: BucketAccess
+          PolicyDocument: {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                    "s3:GetBucketPolicyStatus",
+                    "s3:GetLifecycleConfiguration",
+                    "s3:GetBucketTagging",
+                    "s3:GetBucketWebsite",
+                    "s3:DeleteObjectVersion",
+                    "s3:RestoreObject",
+                    "s3:ListBucket",
+                    "s3:GetBucketPolicy",
+                    "s3:PutObject",
+                    "s3:GetObject",
+                    "s3:AbortMultipartUpload",
+                    "s3:DescribeJob",
+                    "s3:DeleteObject",
+                    "s3:GetBucketLocation",
+                    "s3:PutBucketVersioning",
+                    "s3:GetObjectVersion"
+                ],
+                "Resource": "arn:aws:s3:::training-instance-*"
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                    "s3:GetAccessPoint",
+                    "s3:ListAllMyBuckets",
+                    "s3:ListAccessPoints",
+                    "s3:CreateJob"
+                ],
+                "Resource": "*"
+              }
+            ]
+          }
+
+  InstanceProfile:
+    Type: "AWS::IAM::InstanceProfile"
+    Properties:
+      InstanceProfileName: training-instance-profile
+      Roles:
+        - !Ref InstanceRole
