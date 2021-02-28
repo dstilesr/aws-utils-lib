@@ -20,6 +20,11 @@ Resources:
       ImageId: "ami-0e999cbd62129e3b1"
       SecurityGroups:
         - !Ref InstanceSG
+      Tags:
+        - Key: Name
+          Value: SimpleInstance
+        - Key: Description
+          Value: Simple EC2 Instance
 
   InstanceSG:
     Type: "AWS::EC2::SecurityGroup"
@@ -30,3 +35,6 @@ Resources:
           FromPort: "22"
           ToPort: "22"
           CidrIp: !Ref AccessAddressesParameter
+      Tags:
+        - Key: Name
+          Value: SimpleInstanceSG

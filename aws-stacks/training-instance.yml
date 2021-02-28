@@ -25,6 +25,11 @@ Resources:
       LaunchTemplate:
         LaunchTemplateId: !Ref InstanceLaunchTemplate
         Version: !GetAtt InstanceLaunchTemplate.LatestVersionNumber
+      Tags:
+        - Key: Name
+          Value: MLTrainingInstance
+        - Key: Description
+          Value: Instance for training ML models
 
   InstanceSG:
     Type: "AWS::EC2::SecurityGroup"
@@ -39,6 +44,9 @@ Resources:
           FromPort: "9000"
           ToPort: "9000"
           CidrIp: !Ref AccessAddressesParameter
+      Tags:
+        - Key: Name
+          Value: TrainingInstanceSG
 
   InstanceRole:
     Type: "AWS::IAM::Role"
