@@ -1,0 +1,62 @@
+Parameters:
+  SSHAccessAddresses:
+    Type: String
+    Default: 0.0.0.0/0
+    Description: CIDR range of adresses to have ssh access to the instance
+    AllowedPattern: ^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}$
+  NumWorkerNodes:
+    Type: Number
+    Default: 2
+    Description: Number of worker instances to add to the cluster
+  InstanceTypeParameter:
+    Type: String
+    Description: Type of instances to use in the cluster
+    Default: m5.xlarge
+  KeyNameParameter:
+    Type: String
+    Default: US-West-2-key
+    Description: Name of key to use to ssh into the master node
+
+Resources:
+  ClusterMasterSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: Allow SSH access to the master node.
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: "22"
+          ToPort: "22"
+          CidrIp: !Ref SSHAccessAddresses
+      Tags:
+        - Key: Name
+          Value: ClusterMasterSG
+
+  Cluster:
+    Type: "AWS::EMR::Cluster"
+    Properties:
+      Name: simple-emr-cluster
+      Applications:
+        - Name: Spark
+        - Name: Zeppelin
+      ServiceRole: EMR_DefaultRole
+      JobFlowRole: EMR_EC2_DefaultRole
+      Instances:
+        KeepJobFlowAliveWhenNoSteps: true
+        AdditionalMasterSecurityGroups:
+          - !Ref ClusterMasterSG
+        Ec2KeyName: !Ref KeyNameParameter
+        MasterInstanceGroup:
+          Name: MasterNodeGroup
+          InstanceCount: 1
+          InstanceType: !Ref InstanceTypeParameter
+          Market: ON_DEMAND
+        CoreInstanceGroup:
+          Name: WorkerNodesGroup
+          InstanceCount: !Ref NumWorkerNodes
+          InstanceType: !Ref InstanceTypeParameter
+          Market: SPOT
+      Tags:
+        - Key: Name
+          Value: simple-emr-cluster
+        - Key: Description
+          Value: EMR Cluster for big data processing
