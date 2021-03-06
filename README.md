@@ -14,6 +14,9 @@ The `aws-stacks` directory contains several CloudFormation stacks as `.yml` file
 The idea is to have stacks for everyday tasks such as training an ML model, or setting
 up a logging / tracking server.
 
+The `assets` directory contains bootstrap scripts and configuration files that may be used
+with the stacks.
+
 ## Launching a Stack
 To launch a stack from the AWS CLI, use the following command:
 ```shell
