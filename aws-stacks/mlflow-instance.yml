@@ -33,7 +33,7 @@ Resources:
     Properties:
       KeyName: !Ref KeyNameParam
       InstanceType: t3.small
-      ImageId: "ami-09c5e030f74651050"
+      ImageId: "ami-0ca5c3bd5a268e7db"
       SecurityGroups:
         - !Ref MLFlowInstanceSG
       Tags:
