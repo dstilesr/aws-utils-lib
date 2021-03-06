@@ -25,6 +25,7 @@ Resources:
   ClusterMasterSG:
     Type: "AWS::EC2::SecurityGroup"
     Properties:
+      GroupName: ClusterMasterSG
       GroupDescription: Allow SSH access to the master node.
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -48,7 +49,7 @@ Resources:
       Instances:
         KeepJobFlowAliveWhenNoSteps: true
         AdditionalMasterSecurityGroups:
-          - !Ref ClusterMasterSG
+          - !GetAtt ClusterMasterSG.GroupId
         Ec2KeyName: !Ref KeyNameParameter
         MasterInstanceGroup:
           Name: MasterNodeGroup
