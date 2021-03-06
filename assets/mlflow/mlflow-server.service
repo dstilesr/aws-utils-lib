@@ -1,0 +1,11 @@
+[Unit]
+Description=MLFlow model tracking and loading server
+After=network.target
+
+[Service]
+Restart=on-failure
+RestartSec=30
+ExecStart=/home/ubuntu/mlflow/mlflow-launch.sh
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,40 @@
+Parameters:
+  AccessAddressesParameter:
+    Type: String
+    Default: 0.0.0.0/0
+    Description: CIDR range of adresses to have ssh access to the instance
+    AllowedPattern: ^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}$
+
+  KeyNameParameter:
+    Type: String
+    Default: US-West-2-key
+    Description: Name of key to use to ssh into the instance
+
+Resources:
+  EC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      KeyName: !Ref KeyNameParameter
+      InstanceType: t2.micro
+      # Amazon Linux 2
+      ImageId: "ami-0e999cbd62129e3b1"
+      SecurityGroups:
+        - !Ref InstanceSG
+      Tags:
+        - Key: Name
+          Value: SimpleInstance
+        - Key: Description
+          Value: Simple EC2 Instance
+
+  InstanceSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "Enable access on port 22"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: "22"
+          ToPort: "22"
+          CidrIp: !Ref AccessAddressesParameter
+      Tags:
+        - Key: Name
+          Value: SimpleInstanceSG

@@ -1,0 +1,43 @@
+Parameters:
+  SSHAccessAddresses:
+    Type: String
+    Default: 0.0.0.0/0
+    Description: Addreses that will have SSH access to the instance
+    AllowedPattern: ^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}$
+  KeyNameParam:
+    Type: String
+    Default: US-West-2-key
+    Description: Key to SSH into the instance
+
+Resources:
+  MLFlowInstanceSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: Allow public HTTP access and SSH access
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: "22"
+          ToPort: "22"
+          CidrIp: !Ref SSHAccessAddresses
+        - IpProtocol: tcp
+          FromPort: "80"
+          ToPort: "80"
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: MLFlowSG
+        - Key: Description
+          Value: SG for MLFlow Instance
+  MLFlowInstance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      KeyName: !Ref KeyNameParam
+      InstanceType: t3.small
+      ImageId: "ami-0ca5c3bd5a268e7db"
+      SecurityGroups:
+        - !Ref MLFlowInstanceSG
+      Tags:
+        - Key: Name
+          Value: MLFlowInstance
+        - Key: Description
+          Value: Instance for running an MLFlow Server
