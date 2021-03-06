@@ -32,7 +32,7 @@ Resources:
     Type: "AWS::EC2::Instance"
     Properties:
       KeyName: !Ref KeyNameParam
-      InstanceType: t2.small
+      InstanceType: t3.small
       ImageId: "ami-09c5e030f74651050"
       SecurityGroups:
         - !Ref MLFlowInstanceSG
