@@ -47,7 +47,7 @@ In order to launch an mlflow instance, do the following:
 - First, create the instance with the `mlflow-instance` stack.
 - Then, copy the mlflow assets to the instance with
 ```shell
-scp -i <key-file> -r assets/mlflow/ ubuntu@<instance-ip>:~/mlflow/
+scp -i <key-file> -r assets/mlflow-instance/ ubuntu@<instance-ip>:~/mlflow/
 ```
 - Next, ssh into the instance:
 ```shell
