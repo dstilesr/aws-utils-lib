@@ -3,6 +3,8 @@
 ## Contents
 - [About](#about)
 - [Repository Contents](#repository-contents)
+  - [Directories](#directories)
+  - [Adding a New Stack](#adding-a-new-stack)
 - [Launching a Stack](#launching-a-stack)
   - [Launch MLFlow Instance](#launch-mlflow-instance)
   - [Note on MLFlow Startup](#note-on-mlflow-startup)
@@ -12,12 +14,25 @@ This repo contains several utilities for Data Science and ML Engineering work. I
 this both for personal use and for practice using AWS.
 
 ## Repository Contents
+
+### Directories
 The `aws-stacks` directory contains several CloudFormation stacks as `.yml` files.
 The idea is to have stacks for everyday tasks such as training an ML model, or setting
 up a logging / tracking server.
 
 The `assets` directory contains bootstrap scripts and configuration files that may be used
-with the stacks.
+with the stacks. The assets associated with a given stack, say `my-stack.yml`, in aws-stacks
+should be stored in a directory `assets/my-stack`, that is, with the same name as the stack.
+
+### Adding a New Stack
+In order to add a new stack, first create the CloudFormation `.yml` template and store it in
+the `aws-stacks` directory. When making the template, take the following into account:
+- If the templates uses a CIDR range of addresses to allow SSH access
+  to an instance and / or the name of a key to gain SSH access, name these parameters `SSHAccessAddresses`
+  and `KeyNameParameter`, respectively.
+- If the templates uses assets that must be copied to the instance on startup (such as a bootstrap script),
+  save these files in the `assets` folder under a subdirectory with the same name as the stack, as was
+  said [above](#directories).
 
 ## Launching a Stack
 To launch a stack from the AWS CLI, use the following command:
