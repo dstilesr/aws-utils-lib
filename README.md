@@ -8,6 +8,7 @@
 - [Launching a Stack](#launching-a-stack)
   - [Launch MLFlow Instance](#launch-mlflow-instance)
   - [Note on MLFlow Startup](#note-on-mlflow-startup)
+- [Setup](#setup)
 
 ## About
 This repo contains several utilities for Data Science and ML Engineering work. I made
@@ -63,5 +64,17 @@ This procedure is a bit clumsy, as this should all be done by simply running a b
 script on instance startup, but this will be done in a later iteration. Ideally, one could 
 store the `assets` directory in an S3 bucket and then copy the scripts from there during 
 the instance startup.
+
+## Setup
+In order to set up the library for use, do the following:
+- Create an S3 bucket to store the stacks and assets.
+- Ensure you have the aws CLI installed.
+- Run the `setup.sh` script with `bash setup.sh your-bucket-name`. This will create a
+  `~/.ds-utils-data` directory to store metadata. Within it there will be a `.env` file
+  with the bucket name. Additionally, it will sync your `aws-stacks` and `assets` directories
+  to the bucket.
+  
+If you have already performed the initial setup and have added new stacks or assets, you can once
+again run the `setup.sh` script with `bash setup.sh` to sync these to the bucket.
 
 [Back to top.](#data-science-utils-lib)
