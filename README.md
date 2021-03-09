@@ -33,7 +33,9 @@ the `aws-stacks` directory. When making the template, take the following into ac
   and `KeyNameParameter`, respectively.
 - If the templates uses assets that must be copied to the instance on startup (such as a bootstrap script),
   save these files in the `assets` folder under a subdirectory with the same name as the stack, as was
-  said [above](#directories).
+  said [above](#directories). Additionally, you should add a parameter `AssetsBucketName` to the stack
+  (no default value) to pass the name of the assets bucket, and your instances should have permissions to
+  read from this bucket.
 
 ## Launching a Stack
 To launch a stack from the AWS CLI, use the following command:
