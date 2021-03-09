@@ -91,9 +91,10 @@ class StackLauncher:
         Check that the parameters given for the template are valid and that
         all necessary parameters are provided.
         :param parameter_set: ParameterKey -> ParameterValue dictionary.
-        :return: True if the parameter set is valid, raises ValueError
-            otherwise.
+        :return: True if the parameter set includes the assets bucket key,
+            False otherwise. Raises exception if parameters are not valid.
         """
+        out = False
         valid_params = set()
         required_params = set()
         template_params = self.get_stack_parameters()
@@ -102,13 +103,16 @@ class StackLauncher:
         for p in template_params:
             key = p.get("ParameterKey")
             valid_params.add(key)
-            if "DefaultValue" not in p:
+
+            if key == self.ASSETS_BUCKET_PARAM:
+                out = True
+            elif "DefaultValue" not in p:
                 required_params.add(key)
 
         # Check given parameters
         for k in parameter_set.keys():
             if k not in valid_params:
-                raise ValueError(f"Unknown parameter given: {k}")
+                raise KeyError(f"Unknown parameter given: {k}")
             if k in required_params:
                 required_params.remove(k)
 
@@ -118,7 +122,7 @@ class StackLauncher:
                 "Required parameters not given: %s"
                 % (", ".join(required_params))
             )
-        return True
+        return out
 
     def launch(self, **kwargs):
         """
