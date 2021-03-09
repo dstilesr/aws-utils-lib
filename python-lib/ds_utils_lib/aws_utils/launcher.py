@@ -8,6 +8,9 @@ class StackLauncher:
     Class to launch and manage CloudFormation stacks.
     """
 
+    #: Name of assets bucket parameter in templates
+    ASSETS_BUCKET_PARAM: str = "AssetsBucketName"
+
     def __init__(
             self,
             stack_name: str,
@@ -81,12 +84,41 @@ class StackLauncher:
 
         return validation["Parameters"]
 
-    def validate_stack_parameters(self, parameter_set: Dict):
+    def validate_stack_parameters(
+            self,
+            parameter_set: Dict[str, Any]) -> bool:
         """
         Check that the parameters given for the template are valid and that
         all necessary parameters are provided.
+        :param parameter_set: ParameterKey -> ParameterValue dictionary.
+        :return: True if the parameter set is valid, raises ValueError
+            otherwise.
         """
-        pass
+        valid_params = set()
+        required_params = set()
+        template_params = self.get_stack_parameters()
+
+        # Get sets of valid and required parameters
+        for p in template_params:
+            key = p.get("ParameterKey")
+            valid_params.add(key)
+            if "DefaultValue" not in p:
+                required_params.add(key)
+
+        # Check given parameters
+        for k in parameter_set.keys():
+            if k not in valid_params:
+                raise ValueError(f"Unknown parameter given: {k}")
+            if k in required_params:
+                required_params.remove(k)
+
+        # Check that all required params were given
+        if len(required_params) > 0:
+            raise ValueError(
+                "Required parameters not given: %s"
+                % (", ".join(required_params))
+            )
+        return True
 
     def launch(self, **kwargs):
         """
