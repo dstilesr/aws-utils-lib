@@ -2,6 +2,10 @@ import os
 import boto3
 from ..constants import META_DIR
 from typing import List, Dict, Any
+from ..load_env import load_env_vars
+
+# Load lib env variables
+load_env_vars()
 
 
 class StackLauncher:
