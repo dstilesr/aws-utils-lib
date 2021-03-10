@@ -165,3 +165,10 @@ class StackLauncher:
             Capabilities=["CAPABILITY_NAMED_IAM"]
         )
         return result
+
+    def delete_stack(self):
+        """
+        Deletes the stack.
+        """
+        cf = self.get_cloudformation_client()
+        cf.delete_stack(StackName=self.stack_name)
