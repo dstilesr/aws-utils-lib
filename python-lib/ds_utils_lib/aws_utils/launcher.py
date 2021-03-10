@@ -1,5 +1,6 @@
 import os
 import boto3
+from ..constants import META_DIR
 from typing import List, Dict, Any
 
 
@@ -10,6 +11,9 @@ class StackLauncher:
 
     #: Name of assets bucket parameter in templates
     ASSETS_BUCKET_PARAM: str = "AssetsBucketName"
+
+    #: Name of metadata file (in ~/.ds-utils-data)
+    META_FILE: str = os.path.join(META_DIR, "stacks-metadata.json")
 
     def __init__(
             self,
@@ -50,6 +54,15 @@ class StackLauncher:
         """
         return self.__boto3_session
 
+    @property
+    def template_url(self) -> str:
+        """
+        Read-only S3 URL of the template.
+        """
+        bucket = os.getenv("ASSETS_BUCKET_NAME")
+        template_key = f"aws-stacks/{self.stack_name}.yml"
+        return f"https://s3.amazonaws.com/{bucket}/{template_key}"
+
     def get_cloudformation_client(self):
         """
         Gets a cloudFormation client from the current session.
@@ -76,12 +89,7 @@ class StackLauncher:
         cf = self.get_cloudformation_client()
 
         # Validate the template from S3
-        bucket = os.getenv("ASSETS_BUCKET_NAME")
-        template_key = f"aws-stacks/{self.stack_name}.yml"
-        validation = cf.validate_template(
-            TemplateURL=f"https://s3.amazonaws.com/{bucket}/{template_key}"
-        )
-
+        validation = cf.validate_template(TemplateURL=self.template_url)
         return validation["Parameters"]
 
     def validate_stack_parameters(
@@ -129,6 +137,27 @@ class StackLauncher:
         Creates the stack from the template.
         :param kwargs: Parameters for the stack in dictionary with
             parameterName -> parameterValue mapping.
-        :return:
+        :return: StackID.
         """
-        pass
+        include_bucket = self.validate_stack_parameters(kwargs)
+        if include_bucket:
+            kwargs.update({
+                self.ASSETS_BUCKET_PARAM: os.getenv("ASSETS_BUCKET_NAME")
+            })
+
+        # Create list of parameters in CloudFormation Expected Format
+        parameters_list = []
+        for key, val in kwargs.items():
+            parameters_list.append({
+                "ParameterKey": key,
+                "ParameterValue": val
+            })
+
+        cf = self.get_cloudformation_client()
+        result = cf.create_stack(
+            StackName=self.stack_name,
+            Parameters=parameters_list,
+            TemplateURL=self.template_url,
+            Capabilities=["CAPABILITY_NAMED_IAM"]
+        )
+        return result
