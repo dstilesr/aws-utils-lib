@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="ds_utils_lib",
-    version="0.0.1",
+    version="0.0.2",
     description="A data science utilities library",
     author="David Stiles Rosselli",
     install_requires=[
