@@ -9,6 +9,8 @@
   - [Launch MLFlow Instance](#launch-mlflow-instance)
   - [Note on MLFlow Startup](#note-on-mlflow-startup)
 - [Setup](#setup)
+  - [Sync Stacks to Bucket](#sync-stacks-to-bucket)
+  - [Install Python Library](#install-python-library)
 
 ## About
 This repo contains several utilities for Data Science and ML Engineering work. I made
@@ -68,6 +70,8 @@ store the `assets` directory in an S3 bucket and then copy the scripts from ther
 the instance startup.
 
 ## Setup
+
+### Sync Stacks to Bucket
 In order to set up the library for use, do the following:
 - Create an S3 bucket to store the stacks and assets.
 - Ensure you have the aws CLI installed.
@@ -78,5 +82,12 @@ In order to set up the library for use, do the following:
   
 If you have already performed the initial setup and have added new stacks or assets, you can once
 again run the `setup.sh` script with `bash setup.sh` to sync these to the bucket.
+
+### Install Python Library
+In order to install the python library to manage the stacks, first navigate to the `python-lib` directory
+and then run the setup script with
+```shell
+python setup.py install
+```
 
 [Back to top.](#data-science-utils-lib)
