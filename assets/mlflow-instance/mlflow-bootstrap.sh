@@ -7,7 +7,7 @@
 # Install nginx
 apt-get update \
   && apt upgrade -y \
-  && apt install -y nginx
+  && apt install -y nginx jq
 
 # Install Python, mlflow
 apt install -y python3-pip \

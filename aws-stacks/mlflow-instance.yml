@@ -67,7 +67,7 @@ Resources:
       Policies:
         - PolicyName: AssetsBucketAccess
           PolicyDocument:
-            Version: 2012-20-17
+            Version: 2012-10-17
             Statement:
               - Effect: Allow
                 Action:
@@ -75,3 +75,19 @@ Resources:
                   - "s3:GetObject"
                   - "s3:GetObjectVersion"
                 Resource: !Sub "arn:aws:s3:::${AssetsBucketName}"
+        - PolicyName: SSMParameterAccess
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "ssm:GetParameter"
+                Resource: !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${BucketNameSSM}"
+  BucketNameSSM:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      Name: assets-bucket-name-ssm
+      Tier: Standard
+      Type: String
+      Value: !Ref AssetsBucketName
+      Description: Name of the assets bucket to be accessed from the instance
