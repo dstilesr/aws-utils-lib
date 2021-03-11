@@ -82,11 +82,11 @@ Resources:
               - Effect: Allow
                 Action:
                   - "ssm:GetParameter"
-                Resource: !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${BucketNameSSM}"
+                Resource: !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/mlflow/*"
   BucketNameSSM:
     Type: "AWS::SSM::Parameter"
     Properties:
-      Name: assets-bucket-name-ssm
+      Name: /mlflow/assets-bucket-name-ssm
       Tier: Standard
       Type: String
       Value: !Ref AssetsBucketName
