@@ -11,7 +11,8 @@ apt-get update \
 
 # Install Python, mlflow
 apt install -y python3-pip \
-  && pip3 install -U pip mlflow boto3
+  && pip3 install -U pip \
+  && pip3 install boto3 mlflow
 
 # Make tracking URL
 mkdir -p /mnt/mlflow/params-metrics \
@@ -23,8 +24,6 @@ systemctl start nginx
 #################################################
 # Get assets from bucket
 
-# Bucket name from parameter
-export ASSETS_BUCKET=$(aws ssm get-parameter --name=/mlflow/assets-bucket-name-ssm | jq -r .Parameter.Value)
 export MLFLOW_ASSETS_DIR=/home/ubuntu/mlflow
 
 # Copy assets
