@@ -21,10 +21,19 @@ mkdir -p /mnt/mlflow/params-metrics \
 systemctl start nginx
 
 #################################################
+# Get assets from bucket
+
+# Bucket name from parameter
+export ASSETS_BUCKET=$(aws ssm get-parameter --name=/mlflow/assets-bucket-name-ssm | jq -r .Parameter.Value)
+export MLFLOW_ASSETS_DIR=/home/ubuntu/mlflow
+
+# Copy assets
+aws s3 cp s3://$ASSETS_BUCKET/assets/mlflow-instance $MLFLOW_ASSETS_DIR --recursive
+
+#################################################
 # Setup nginx server
 # Here we assume the mlflow assets are stored in /home/ubuntu/mlflow/
 # At a later stage one might store them in an S3 bucket and download them
-export MLFLOW_ASSETS_DIR=/home/ubuntu/mlflow
 
 # Link config file
 cp $MLFLOW_ASSETS_DIR/mlflow_server.conf /etc/nginx/sites-available/mlflow_server.conf

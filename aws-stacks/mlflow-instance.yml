@@ -37,7 +37,7 @@ Resources:
       KeyName: !Ref KeyNameParameter
       InstanceType: t3.small
       ImageId: "ami-0ca5c3bd5a268e7db"
-      IamInstanceProfile: !GetAtt MLFLowInstanceProfile.Arn
+      IamInstanceProfile: !Ref MLFLowInstanceProfile
       SecurityGroups:
         - !Ref MLFlowInstanceSG
       Tags:
@@ -45,10 +45,11 @@ Resources:
           Value: MLFlowInstance
         - Key: Description
           Value: Instance for running an MLFlow Server
+      UserData: !Sub "s3://${AssetsBucketName}/assets/${AWS::StackName}/mlflow-bootstrap.sh"
   MLFLowInstanceProfile:
     Type: "AWS::IAM::InstanceProfile"
     Properties:
-      InstanceProfileName: "mlflow-instance-profile"
+      InstanceProfileName: MLFlowInstanceProfile
       Roles:
         - !Ref MLFlowInstanceRole
   MLFlowInstanceRole:
