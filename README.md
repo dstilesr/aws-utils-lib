@@ -62,12 +62,31 @@ python setup.py install
 ```
 
 ## Launching a Stack
+
+### Direct
 To launch a stack from the AWS CLI, use the following command:
 ```shell
 aws cloudformation create-stack --stack-name <name> --template-body=file://<path-to-file> --capabilities CAPABILITY_NAMED_IAM
 ```
 Use the name of the `.yml` file as the name of the stack, and include additional stack parameters 
 with the `--parameters ParameterKey=parameter,ParameterValue=value` syntax, or via a JSON file.
+
+### With Python Library
+If you have installed the [python library](#install-python-library), you can launch a stack more easily
+with
+```shell
+python -m ds_utils_lib.aws_utils launch --stack_name=a-stack-name
+```
+To add parameters, such as `KeyNameParameter`, for example, you can add them as flags. So for example to set this 
+parameter you could run 
+```shell
+python -m ds_utils_lib.aws_utils launch --stack_name=a-stack-name --KeyNameParameter=a-key-name
+```
+
+Additionally, you can also delete a stack with the python library as follows:
+```shell
+python -m ds_utils_lib.aws_utils delete --stack_name=a-stack-name
+```
 
 ### Launch MLFlow Instance
 In order to launch an mlflow instance, do the following:
