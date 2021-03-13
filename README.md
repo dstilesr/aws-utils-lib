@@ -9,7 +9,7 @@
   - [Sync Stacks to Bucket](#sync-stacks-to-bucket)
   - [Install Python Library](#install-python-library)
 - [Launching a Stack](#launching-a-stack)
-  - [Direct](#directories)
+  - [Direct](#direct)
   - [With Python Library](#with-python-library)
   - [Launch MLFlow Instance](#launch-mlflow-instance)
   - [Note on MLFlow Startup](#note-on-mlflow-startup)
