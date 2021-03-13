@@ -5,12 +5,12 @@
 - [Repository Contents](#repository-contents)
   - [Directories](#directories)
   - [Adding a New Stack](#adding-a-new-stack)
-- [Launching a Stack](#launching-a-stack)
-  - [Launch MLFlow Instance](#launch-mlflow-instance)
-  - [Note on MLFlow Startup](#note-on-mlflow-startup)
 - [Setup](#setup)
   - [Sync Stacks to Bucket](#sync-stacks-to-bucket)
   - [Install Python Library](#install-python-library)
+- [Launching a Stack](#launching-a-stack)
+  - [Launch MLFlow Instance](#launch-mlflow-instance)
+  - [Note on MLFlow Startup](#note-on-mlflow-startup)
 
 ## About
 This repo contains several utilities for Data Science and ML Engineering work. I made
@@ -38,6 +38,28 @@ the `aws-stacks` directory. When making the template, take the following into ac
   said [above](#directories). Additionally, you should add a parameter `AssetsBucketName` to the stack
   (no default value) to pass the name of the assets bucket, and your instances should have permissions to
   read from this bucket.
+  
+
+## Setup
+
+### Sync Stacks to Bucket
+In order to set up the library for use, do the following:
+- Create an S3 bucket to store the stacks and assets.
+- Ensure you have the aws CLI installed.
+- Run the `setup.sh` script with `bash setup.sh your-bucket-name`. This will create a
+  `~/.ds-utils-data` directory to store metadata. Within it there will be a `.env` file
+  with the bucket name. Additionally, it will sync your `aws-stacks` and `assets` directories
+  to the bucket.
+
+If you have already performed the initial setup and have added new stacks or assets, you can once
+again run the `setup.sh` script with `bash setup.sh` to sync these to the bucket.
+
+### Install Python Library
+In order to install the python library to manage the stacks, first navigate to the `python-lib` directory
+and then run the setup script with
+```shell
+python setup.py install
+```
 
 ## Launching a Stack
 To launch a stack from the AWS CLI, use the following command:
@@ -68,26 +90,5 @@ This procedure is a bit clumsy, as this should all be done by simply running a b
 script on instance startup, but this will be done in a later iteration. Ideally, one could 
 store the `assets` directory in an S3 bucket and then copy the scripts from there during 
 the instance startup.
-
-## Setup
-
-### Sync Stacks to Bucket
-In order to set up the library for use, do the following:
-- Create an S3 bucket to store the stacks and assets.
-- Ensure you have the aws CLI installed.
-- Run the `setup.sh` script with `bash setup.sh your-bucket-name`. This will create a
-  `~/.ds-utils-data` directory to store metadata. Within it there will be a `.env` file
-  with the bucket name. Additionally, it will sync your `aws-stacks` and `assets` directories
-  to the bucket.
-  
-If you have already performed the initial setup and have added new stacks or assets, you can once
-again run the `setup.sh` script with `bash setup.sh` to sync these to the bucket.
-
-### Install Python Library
-In order to install the python library to manage the stacks, first navigate to the `python-lib` directory
-and then run the setup script with
-```shell
-python setup.py install
-```
 
 [Back to top.](#data-science-utils-lib)
