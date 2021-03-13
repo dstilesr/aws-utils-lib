@@ -37,7 +37,7 @@ Resources:
       KeyName: !Ref KeyNameParameter
       InstanceType: t3.small
       ImageId: "ami-0ca5c3bd5a268e7db"
-      IamInstanceProfile: !GetAtt MLFLowInstanceProfile.Arn
+      IamInstanceProfile: !Ref MLFLowInstanceProfile
       SecurityGroups:
         - !Ref MLFlowInstanceSG
       Tags:
@@ -45,10 +45,18 @@ Resources:
           Value: MLFlowInstance
         - Key: Description
           Value: Instance for running an MLFlow Server
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          apt-get update && apt install -y python3 python3-pip jq
+          pip3 install botocore==1.18.14 awscli==1.18.155 boto3==1.15.14
+          aws s3 cp s3://${AssetsBucketName}/assets/${AWS::StackName}/mlflow-bootstrap.sh /tmp/mlflow-bootstrap.sh
+          export ASSETS_BUCKET=$(aws ssm get-parameter --region=${AWS::Region} --name=/mlflow/assets-bucket-name-ssm | jq -r .Parameter.Value)
+          source /tmp/mlflow-bootstrap.sh && rm /tmp/mlflow-bootstrap.sh
   MLFLowInstanceProfile:
     Type: "AWS::IAM::InstanceProfile"
     Properties:
-      InstanceProfileName: "mlflow-instance-profile"
+      InstanceProfileName: MLFlowInstanceProfile
       Roles:
         - !Ref MLFlowInstanceRole
   MLFlowInstanceRole:
@@ -74,7 +82,9 @@ Resources:
                   - "s3:ListBucket"
                   - "s3:GetObject"
                   - "s3:GetObjectVersion"
-                Resource: !Sub "arn:aws:s3:::${AssetsBucketName}"
+                Resource:
+                  - !Sub "arn:aws:s3:::${AssetsBucketName}"
+                  - !Sub "arn:aws:s3:::${AssetsBucketName}/*"
         - PolicyName: SSMParameterAccess
           PolicyDocument:
             Version: 2012-10-17

@@ -5,13 +5,12 @@
 #################################################
 
 # Install nginx
-apt-get update \
-  && apt upgrade -y \
-  && apt install -y nginx jq
+apt upgrade -y \
+  && apt install -y nginx
 
-# Install Python, mlflow
-apt install -y python3-pip \
-  && pip3 install -U pip mlflow boto3
+# Install mlflow
+pip3 install -U pip \
+  && pip3 install mlflow
 
 # Make tracking URL
 mkdir -p /mnt/mlflow/params-metrics \
@@ -21,10 +20,17 @@ mkdir -p /mnt/mlflow/params-metrics \
 systemctl start nginx
 
 #################################################
+# Get assets from bucket
+
+export MLFLOW_ASSETS_DIR=/home/ubuntu/mlflow
+
+# Copy assets
+aws s3 cp s3://$ASSETS_BUCKET/assets/mlflow-instance $MLFLOW_ASSETS_DIR/ --recursive
+
+#################################################
 # Setup nginx server
 # Here we assume the mlflow assets are stored in /home/ubuntu/mlflow/
 # At a later stage one might store them in an S3 bucket and download them
-export MLFLOW_ASSETS_DIR=/home/ubuntu/mlflow
 
 # Link config file
 cp $MLFLOW_ASSETS_DIR/mlflow_server.conf /etc/nginx/sites-available/mlflow_server.conf
