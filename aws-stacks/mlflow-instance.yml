@@ -45,7 +45,13 @@ Resources:
           Value: MLFlowInstance
         - Key: Description
           Value: Instance for running an MLFlow Server
-      UserData: !Sub "s3://${AssetsBucketName}/assets/${AWS::StackName}/mlflow-bootstrap.sh"
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          apt-get update && apt install -y python3 python3-pip awscli
+          aws s3 cp s3://${AssetsBucketName}/assets/${AWS::StackName}/mlflow-bootstrap.sh /tmp/mlflow-bootstrap.sh
+          source /tmp/mlflow-bootstrap.sh
+          rm /tmp/mlflow-bootstrap.sh
   MLFLowInstanceProfile:
     Type: "AWS::IAM::InstanceProfile"
     Properties:
@@ -75,7 +81,9 @@ Resources:
                   - "s3:ListBucket"
                   - "s3:GetObject"
                   - "s3:GetObjectVersion"
-                Resource: !Sub "arn:aws:s3:::${AssetsBucketName}"
+                Resource:
+                  - !Sub "arn:aws:s3:::${AssetsBucketName}"
+                  - !Sub "arn:aws:s3:::${AssetsBucketName}/*"
         - PolicyName: SSMParameterAccess
           PolicyDocument:
             Version: 2012-10-17
