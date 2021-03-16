@@ -83,7 +83,9 @@ Resources:
                   - "s3:DeleteObjectVersion"
                   - "s3:RestoreObject"
                   - "s3:AbortMultipartUpload"
-                Resource: !GetAtt StorageBucket.Arn
+                Resource:
+                  - !GetAtt StorageBucket.Arn
+                  - !Sub "${StorageBucket.Arn}/*"
 
   InstanceProfile:
     Type: "AWS::IAM::InstanceProfile"
