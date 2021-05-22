@@ -1,4 +1,4 @@
-# Data Science Utils Lib
+# AWS Utils Lib
 
 ## Contents
 - [About](#about)
@@ -75,17 +75,17 @@ with the `--parameters ParameterKey=parameter,ParameterValue=value` syntax, or v
 If you have installed the [python library](#install-python-library), you can launch a stack more easily
 with
 ```shell
-python -m ds_utils_lib.aws_utils launch --stack_name=a-stack-name
+python -m aws_utils_lib.cf_stack launch --stack_name=a-stack-name
 ```
 To add parameters, such as `KeyNameParameter`, for example, you can add them as flags. So for example to set this 
 parameter you could run 
 ```shell
-python -m ds_utils_lib.aws_utils launch --stack_name=a-stack-name --KeyNameParameter=a-key-name
+python -m aws_utils_lib.cf_stack launch --stack_name=a-stack-name --KeyNameParameter=a-key-name
 ```
 
 Additionally, you can also delete a stack with the python library as follows:
 ```shell
-python -m ds_utils_lib.aws_utils delete --stack_name=a-stack-name
+python -m aws_utils_lib.cf_stack delete --stack_name=a-stack-name
 ```
 
-[Back to top.](#data-science-utils-lib)
+[Back to top.](#aws-utils-lib)

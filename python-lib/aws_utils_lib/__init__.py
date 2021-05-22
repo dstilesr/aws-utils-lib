@@ -1,2 +1,2 @@
-from . import aws_utils
+from . import cf_stack
 from .constants import META_DIR

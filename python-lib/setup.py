@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="ds_utils_lib",
-    version="0.0.2",
-    description="A data science utilities library",
+    name="aws_utils_lib",
+    version="0.0.3",
+    description="A utilities library to interact with aws",
     author="David Stiles Rosselli",
     install_requires=[
         "boto3",
