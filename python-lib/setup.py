@@ -8,9 +8,7 @@ setup(
     install_requires=[
         "boto3",
         "fire<1.0.0",
-        "python-dotenv",
-        "tensorflow>=2.0.0",
-        "numpy>1.0.0"
+        "python-dotenv"
     ],
     packages=find_packages()
 )
