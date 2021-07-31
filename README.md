@@ -11,6 +11,7 @@
 - [Launching a Stack](#launching-a-stack)
   - [Direct](#direct)
   - [With Python Library](#with-python-library)
+- [Library Versioning](#library-versioning)
 
 ## About
 This repo contains several utilities for Data Science and ML Engineering work. I made
@@ -87,5 +88,16 @@ Additionally, you can also delete a stack with the python library as follows:
 ```shell
 python -m aws_utils_lib.cf_stack delete --stack_name=a-stack-name
 ```
+
+You can also use the library to list the currently deployed stacks with:
+```shell
+python -m aws_utils_lib.cf_stack active-stacks
+```
+
+## Library Versioning
+The versioning of the python library should use these guidelines:
+- Tiny version change (`0.0.X`): Minor change or bugfix.
+- Minor version change (`0.X.0`): New features or functionality.
+- Major version change (`X.0.0`): Change that breaks or substantially alters existing functionality or API.
 
 [Back to top.](#aws-utils-lib)

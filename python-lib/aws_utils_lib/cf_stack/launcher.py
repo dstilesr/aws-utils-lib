@@ -1,11 +1,10 @@
 import os
 import boto3
-from ..constants import META_DIR
 from typing import List, Dict, Any
-from ..load_env import load_env_vars
 
-# Load lib env variables
-load_env_vars()
+# Imports from package
+from ..constants import META_DIR
+from .stacktracker import StackTracker
 
 
 class StackLauncher:
@@ -16,16 +15,12 @@ class StackLauncher:
     #: Name of assets bucket parameter in templates
     ASSETS_BUCKET_PARAM: str = "AssetsBucketName"
 
-    #: Name of metadata file (in ~/.ds-utils-data)
-    META_FILE: str = os.path.join(META_DIR, "stacks-metadata.json")
-
     def __init__(
             self,
             stack_name: str,
             aws_profile: str = "default",
             aws_region: str = "us-west-2"):
         """
-
         :param stack_name: Name of the stack.
         :param aws_profile: Name of AWS profile to select credentials.
         """
@@ -36,6 +31,7 @@ class StackLauncher:
             profile_name=aws_profile,
             region_name=aws_region
         )
+        self.tracker = StackTracker(META_DIR)
 
     @property
     def stack_name(self) -> str:
@@ -164,6 +160,9 @@ class StackLauncher:
             TemplateURL=self.template_url,
             Capabilities=["CAPABILITY_NAMED_IAM"]
         )
+
+        # Log action
+        self.tracker.log_stack_launch(self.stack_name)
         return result
 
     def delete_stack(self):
@@ -172,3 +171,12 @@ class StackLauncher:
         """
         cf = self.get_cloudformation_client()
         cf.delete_stack(StackName=self.stack_name)
+
+        # Log action
+        self.tracker.log_stack_deletion(self.stack_name)
+
+    def is_active(self) -> bool:
+        """
+        Tells whether the stack is currently deployed.
+        """
+        return self.tracker.is_stack_active(self.stack_name)
