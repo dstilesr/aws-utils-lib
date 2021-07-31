@@ -48,8 +48,9 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
-          apt-get update && apt install -y python3 python3-pip jq
-          pip3 install botocore==1.18.14 awscli==1.18.155 boto3==1.15.14
+          apt-get update && apt upgrade -y && apt install -y python3 python3-pip jq nginx
+          pip3 install -U pip
+          pip3 install botocore==1.18.14 awscli==1.18.155 boto3==1.15.14 mlflow
           aws s3 cp s3://${AssetsBucketName}/assets/${AWS::StackName}/mlflow-bootstrap.sh /tmp/mlflow-bootstrap.sh
           export ASSETS_BUCKET=$(aws ssm get-parameter --region=${AWS::Region} --name=/mlflow/assets-bucket-name-ssm | jq -r .Parameter.Value)
           source /tmp/mlflow-bootstrap.sh && rm /tmp/mlflow-bootstrap.sh
