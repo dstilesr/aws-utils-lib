@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="aws_utils_lib",
-    version="0.0.4",
+    version="0.1.0",
     description="A utilities library to interact with aws",
     author="David Stiles Rosselli",
     install_requires=[
