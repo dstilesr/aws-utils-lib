@@ -1,6 +1,6 @@
 import os
 import json
-from typing import Dict
+from typing import Dict, List
 from datetime import datetime
 
 
@@ -79,7 +79,7 @@ class StackTracker:
             meta = json.load(f)
         return meta
 
-    def stack_info(self, stack_name: str) -> Dict[str, Dict]:
+    def stack_info(self, stack_name: str) -> Dict:
         """
         Get the metadata of the given stack.
         :param stack_name:
@@ -96,16 +96,42 @@ class StackTracker:
         """
         return self.stack_info(stack_name).get("is_active", False)
 
+    def _update_stack_data(self, stack_name: str, new_data: Dict):
+        """
+        Update a stack's metadata.
+        :param stack_name:
+        :param new_data: New metadata dictionary.
+        """
+        meta = self.metadata
+        meta[stack_name] = new_data
+        self.metadata = meta
+
     def log_stack_launch(self, stack_name: str):
         """
         Record the launch of a new stack in the metadata.
         :param stack_name: Name of stack.
         """
-        raise NotImplementedError
+        new_meta = {
+            "is_active": True,
+            "last_launched": datetime.now().strftime(self.DATETIME_FMT)
+        }
+        self._update_stack_data(stack_name, new_meta)
 
     def log_stack_deletion(self, stack_name: str):
         """
         Log the takedown / deletion of an existing stack.
         :param stack_name: Name of stack.
         """
-        raise NotImplementedError
+        if not self.is_stack_active(stack_name):
+            raise KeyError("Stack has not been launched!")
+
+        stack_meta = self.stack_info(stack_name)
+        stack_meta["is_active"] = False
+        self._update_stack_data(stack_name, stack_meta)
+
+    def active_stacks(self) -> List[str]:
+        """
+        Get the list of names of currently active stacks.
+        :return: List of strings.
+        """
+        return [k for k in self.metadata.keys() if self.is_stack_active(k)]
