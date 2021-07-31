@@ -1,5 +1,11 @@
 import fire
+
+# From package
 from .launcher import StackLauncher
+from ..load_env import load_env_vars
+
+# Load environment variables
+load_env_vars()
 
 
 def launch_stack(

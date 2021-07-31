@@ -1,11 +1,9 @@
 import os
 import boto3
-from ..constants import META_DIR
 from typing import List, Dict, Any
-from ..load_env import load_env_vars
 
-# Load lib env variables
-load_env_vars()
+# Imports from package
+from ..constants import META_DIR
 
 
 class StackLauncher:
@@ -15,9 +13,6 @@ class StackLauncher:
 
     #: Name of assets bucket parameter in templates
     ASSETS_BUCKET_PARAM: str = "AssetsBucketName"
-
-    #: Name of metadata file (in ~/.ds-utils-data)
-    META_FILE: str = os.path.join(META_DIR, "stacks-metadata.json")
 
     def __init__(
             self,
