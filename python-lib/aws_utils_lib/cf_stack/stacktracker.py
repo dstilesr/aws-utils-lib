@@ -4,7 +4,7 @@ from typing import Dict
 from datetime import datetime
 
 
-class Tracker:
+class StackTracker:
     """
     Class to handle the tracking of the stacks (which are currently active
     or deployed). The metadata is stored in a JSON file in the metadata
