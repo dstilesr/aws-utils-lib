@@ -4,6 +4,7 @@ from typing import List, Dict, Any
 
 # Imports from package
 from ..constants import META_DIR
+from .stacktracker import StackTracker
 
 
 class StackLauncher:
@@ -20,7 +21,6 @@ class StackLauncher:
             aws_profile: str = "default",
             aws_region: str = "us-west-2"):
         """
-
         :param stack_name: Name of the stack.
         :param aws_profile: Name of AWS profile to select credentials.
         """
@@ -31,6 +31,7 @@ class StackLauncher:
             profile_name=aws_profile,
             region_name=aws_region
         )
+        self.tracker = StackTracker(META_DIR)
 
     @property
     def stack_name(self) -> str:
@@ -159,6 +160,9 @@ class StackLauncher:
             TemplateURL=self.template_url,
             Capabilities=["CAPABILITY_NAMED_IAM"]
         )
+
+        # Log action
+        self.tracker.log_stack_launch(self.stack_name)
         return result
 
     def delete_stack(self):
@@ -167,3 +171,12 @@ class StackLauncher:
         """
         cf = self.get_cloudformation_client()
         cf.delete_stack(StackName=self.stack_name)
+
+        # Log action
+        self.tracker.log_stack_deletion(self.stack_name)
+
+    def is_active(self) -> bool:
+        """
+        Tells whether the stack is currently deployed.
+        """
+        return self.tracker.is_stack_active(self.stack_name)
