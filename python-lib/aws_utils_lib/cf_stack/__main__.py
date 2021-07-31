@@ -1,8 +1,10 @@
 import fire
 
 # From package
+from ..constants import META_DIR
 from .launcher import StackLauncher
 from ..load_env import load_env_vars
+from .stacktracker import StackTracker
 
 # Load environment variables
 load_env_vars()
@@ -42,8 +44,20 @@ def delete_stack(
     print(result)
 
 
+def active_stacks():
+    """
+    Print List of active stacks.
+    :return:
+    """
+    tracker = StackTracker(META_DIR)
+    print("Active stacks:")
+    for name in tracker.active_stacks():
+        print("- %s" % name)
+
+
 # Launch CLI with Fire
 fire.Fire({
     "launch": launch_stack,
-    "delete": delete_stack
+    "delete": delete_stack,
+    "active-stacks": active_stacks
 })
