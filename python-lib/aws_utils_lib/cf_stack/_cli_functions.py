@@ -1,7 +1,10 @@
+import os
+import re
+
 # From package
-from ..constants import META_DIR
 from .launcher import StackLauncher
 from .stacktracker import StackTracker
+from ..constants import META_DIR, ENV_PATH
 
 
 def launch_stack(
@@ -48,3 +51,34 @@ def active_stacks():
     for name in tracker.active_stacks():
         print("- %s" % name)
 
+
+def set_default_aws_profile(aws_profile: str):
+    """
+    Set the name of the default AWS profile to use and save it in the
+    library's env file.
+    :param aws_profile: Name of AWS profile to set as default.
+    """
+    aws_profile = aws_profile.strip()
+
+    # Check if there is any whitespace in the string.
+    if re.search(r"\s", aws_profile) is not None:
+        raise ValueError("Profile name cannot contain whitespace!")
+
+    with open(ENV_PATH, "r") as f:
+        text = f.read()
+
+    assign_txt = f"DEFAULT_PROFILE={aws_profile}"
+    # Check if the variable has already been set
+    if "DEFAULT_PROFILE" in text:
+        new_text = re.sub(
+            r"DEFAULT_PROFILE=[^\s]+",
+            assign_txt,
+            text
+        )
+    else:
+        new_text = text if text.endswith("\n") else (text + "\n")
+        new_text += f"export {assign_txt}\n"
+
+    # Write to env file
+    with open(ENV_PATH, "w") as f:
+        f.write(new_text)

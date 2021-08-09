@@ -12,5 +12,6 @@ load_env_vars()
 fire.Fire({
     "launch": cli.launch_stack,
     "delete": cli.delete_stack,
-    "active-stacks": cli.active_stacks
+    "active-stacks": cli.active_stacks,
+    "set-default-profile": cli.set_default_aws_profile
 })
