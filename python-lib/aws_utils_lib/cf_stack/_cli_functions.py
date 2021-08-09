@@ -1,5 +1,6 @@
 import os
 import re
+from typing import Optional
 
 # From package
 from .launcher import StackLauncher
@@ -9,17 +10,21 @@ from ..constants import META_DIR, ENV_PATH
 
 def launch_stack(
         stack_name: str,
-        aws_profile: str = "default",
+        aws_profile: Optional[str] = None,
         aws_region: str = "us-west-2",
         **parameters):
     """
     Launches the stack (for CLI use).
     :param stack_name: Name of the stack to launch (Template must be in
         aws-stacks).
-    :param aws_profile: Profile to use for credentials.
+    :param aws_profile: Profile to use for credentials. Default is
+        DEFAULT_PROFILE (if it has been set) or otherwise "default".
     :param aws_region: Region where stack will be launched.
     :param parameters: Parameters for the stack.
     """
+    if aws_profile is None:
+        aws_profile = os.getenv("DEFAULT_PROFILE", "default")
+
     launcher = StackLauncher(stack_name, aws_profile, aws_region)
     result = launcher.launch(**parameters)
     print(result)
@@ -27,15 +32,19 @@ def launch_stack(
 
 def delete_stack(
         stack_name: str,
-        aws_profile: str = "default",
+        aws_profile: Optional[str] = None,
         aws_region: str = "us-west-2"):
     """
     Launches the stack (for CLI use).
     :param stack_name: Name of the stack to launch (Template must be in
         aws-stacks).
-    :param aws_profile: Profile to use for credentials.
+    :param aws_profile: Profile to use for credentials. Default is
+        DEFAULT_PROFILE (if it has been set) or otherwise "default".
     :param aws_region: Region where stack will be launched.
     """
+    if aws_profile is None:
+        aws_profile = os.getenv("DEFAULT_PROFILE", "default")
+
     launcher = StackLauncher(stack_name, aws_profile, aws_region)
     result = launcher.delete_stack()
     print(result)
