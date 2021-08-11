@@ -51,7 +51,7 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
-          apt-get update && apt upgrade -y && apt install -y python3 python3-pip jq nginx
+          apt-get update && apt upgrade -y && apt install -y python3 python3-pip nginx
           pip3 install -U pip
           pip3 install botocore==1.18.14 awscli==1.18.155 boto3==1.15.14 mlflow
           aws s3 cp s3://${AssetsBucketName}/assets/${AWS::StackName}/mlflow-bootstrap.sh /tmp/mlflow-bootstrap.sh
