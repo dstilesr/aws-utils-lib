@@ -15,6 +15,7 @@ Parameters:
 Resources:
   MLFlowBucket:
     Type: "AWS::S3::Bucket"
+    DeletionPolicy: Retain
 
   MLFlowInstanceSG:
     Type: "AWS::EC2::SecurityGroup"
@@ -56,6 +57,7 @@ Resources:
           pip3 install botocore==1.18.14 awscli==1.18.155 boto3==1.15.14 mlflow
           aws s3 cp s3://${AssetsBucketName}/assets/${AWS::StackName}/mlflow-bootstrap.sh /tmp/mlflow-bootstrap.sh
           export ASSETS_BUCKET=${AssetsBucketName}
+          export MLFLOW_BUCKET=${MLFlowBucket}
           source /tmp/mlflow-bootstrap.sh && rm /tmp/mlflow-bootstrap.sh
   MLFLowInstanceProfile:
     Type: "AWS::IAM::InstanceProfile"
