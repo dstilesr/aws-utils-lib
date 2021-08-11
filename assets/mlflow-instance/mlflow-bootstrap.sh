@@ -4,14 +4,6 @@
 # Bootstrap script for MLFlow instance (Ubuntu)
 #################################################
 
-# Install nginx
-apt upgrade -y \
-  && apt install -y nginx
-
-# Install mlflow
-pip3 install -U pip \
-  && pip3 install mlflow
-
 # Make tracking URL
 mkdir -p /mnt/mlflow/params-metrics \
   && chmod -R a+rwx /mnt/mlflow
@@ -42,6 +34,9 @@ systemctl restart nginx
 
 #################################################
 # Setup MLFlow daemon
+
+# Set artifact root to S3 Bucket in launch file
+echo "--default-artifact-root $MLFLOW_BUCKET" >> $MLFLOW_ASSETS_DIR/mlflow-launch.sh
 
 # Change permissions of launch file to allow execution
 chmod 005 $MLFLOW_ASSETS_DIR/mlflow-launch.sh

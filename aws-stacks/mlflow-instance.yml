@@ -13,6 +13,10 @@ Parameters:
     Description: Name of bucket to download assets from
 
 Resources:
+  MLFlowBucket:
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: Retain
+
   MLFlowInstanceSG:
     Type: "AWS::EC2::SecurityGroup"
     Properties:
@@ -48,10 +52,12 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
-          apt-get update && apt install -y python3 python3-pip jq
-          pip3 install botocore==1.18.14 awscli==1.18.155 boto3==1.15.14
+          apt-get update && apt upgrade -y && apt install -y python3 python3-pip nginx
+          pip3 install -U pip
+          pip3 install botocore==1.18.14 awscli==1.18.155 boto3==1.15.14 mlflow
           aws s3 cp s3://${AssetsBucketName}/assets/${AWS::StackName}/mlflow-bootstrap.sh /tmp/mlflow-bootstrap.sh
-          export ASSETS_BUCKET=$(aws ssm get-parameter --region=${AWS::Region} --name=/mlflow/assets-bucket-name-ssm | jq -r .Parameter.Value)
+          export ASSETS_BUCKET=${AssetsBucketName}
+          export MLFLOW_BUCKET=${MLFlowBucket}
           source /tmp/mlflow-bootstrap.sh && rm /tmp/mlflow-bootstrap.sh
   MLFLowInstanceProfile:
     Type: "AWS::IAM::InstanceProfile"
@@ -73,6 +79,23 @@ Resources:
             Action:
               - "sts:AssumeRole"
       Policies:
+        - PolicyName: StorageBucketAccess
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "s3:ListBucket"
+                  - "s3:PutObject"
+                  - "s3:GetObject"
+                  - "s3:GetObjectVersion"
+                  - "s3:DeleteObject"
+                  - "s3:DeleteObjectVersion"
+                  - "s3:RestoreObject"
+                  - "s3:AbortMultipartUpload"
+                Resource:
+                  - !GetAtt MLFlowBucket.Arn
+                  - !Sub "${MLFlowBucket.Arn}/*"
         - PolicyName: AssetsBucketAccess
           PolicyDocument:
             Version: 2012-10-17
@@ -85,19 +108,3 @@ Resources:
                 Resource:
                   - !Sub "arn:aws:s3:::${AssetsBucketName}"
                   - !Sub "arn:aws:s3:::${AssetsBucketName}/*"
-        - PolicyName: SSMParameterAccess
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - "ssm:GetParameter"
-                Resource: !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/mlflow/*"
-  BucketNameSSM:
-    Type: "AWS::SSM::Parameter"
-    Properties:
-      Name: /mlflow/assets-bucket-name-ssm
-      Tier: Standard
-      Type: String
-      Value: !Ref AssetsBucketName
-      Description: Name of the assets bucket to be accessed from the instance
