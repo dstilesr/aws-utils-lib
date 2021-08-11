@@ -35,6 +35,9 @@ systemctl restart nginx
 #################################################
 # Setup MLFlow daemon
 
+# Set artifact root to S3 Bucket in launch file
+echo "--default-artifact-root $MLFLOW_BUCKET" >> $MLFLOW_ASSETS_DIR/mlflow-launch.sh
+
 # Change permissions of launch file to allow execution
 chmod 005 $MLFLOW_ASSETS_DIR/mlflow-launch.sh
 
