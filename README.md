@@ -9,8 +9,6 @@
   - [Sync Stacks to Bucket](#sync-stacks-to-bucket)
   - [Install Python Library](#install-python-library)
 - [Launching a Stack](#launching-a-stack)
-  - [Direct](#direct)
-  - [With Python Library](#with-python-library)
 - [Library Versioning](#library-versioning)
 
 ## About
@@ -64,16 +62,7 @@ python setup.py install
 
 ## Launching a Stack
 
-### Direct
-To launch a stack from the AWS CLI, use the following command:
-```shell
-aws cloudformation create-stack --stack-name <name> --template-body=file://<path-to-file> --capabilities CAPABILITY_NAMED_IAM
-```
-Use the name of the `.yml` file as the name of the stack, and include additional stack parameters 
-with the `--parameters ParameterKey=parameter,ParameterValue=value` syntax, or via a JSON file.
-
-### With Python Library
-If you have installed the [python library](#install-python-library), you can launch a stack more easily
+Once you have installed the [python library](#install-python-library), you can launch a stack more easily
 with
 ```shell
 python -m aws_utils_lib.cf_stack launch --stack_name=a-stack-name
