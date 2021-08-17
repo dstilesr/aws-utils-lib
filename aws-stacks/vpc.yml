@@ -31,3 +31,24 @@ Resources:
           Value: PublicSubnet1
         - Key: Description
           Value: "A public subnet of the VPC"
+
+  PrivateSubnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      CidrBlock: 10.0.2.0/24
+      VpcId: !Ref StackVPC
+      Tags:
+        - Key: Name
+          Value: PrivateSubnet1
+        - Key: Description
+          Value: "A private subnet of the VPC"
+
+  PublicACL:
+    Type: "AWS::EC2::NetworkAcl"
+    Properties:
+      VpcId: !Ref StackVpc
+      Tags:
+        - Key: Name
+          Value: PublicACL
+        - Key: Description
+          Value: "ACL for public subnet."
