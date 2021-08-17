@@ -1,10 +1,33 @@
 Resources:
   StackVPC:
     Type: "AWS::EC2::VPC"
-    CidrBlock: 10.0.0.0/16
-    EnableDnsSupport: "false"
-    Tags:
-      - Key: Name
-        Value: StackVPC
-      - Key: Description
-        Value: "VPC created by CloudFormation stack"
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: "false"
+      Tags:
+        - Key: Name
+          Value: StackVPC
+        - Key: Description
+          Value: "VPC created by CloudFormation stack"
+  StackIG:
+    Type: "AWS::EC2::InternetGateway"
+    Properties:
+      Tags:
+        - Key: Name
+          Value: StackIG
+  VPCGatewayAssoc:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties:
+      VpcId: !Ref StackVPC
+      InternetGatewayId: !Ref StackIG
+
+  PublicSubnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      CidrBlock: 10.0.1.0/24
+      VpcId: !Ref StackVPC
+      Tags:
+        - Key: Name
+          Value: PublicSubnet1
+        - Key: Description
+          Value: "A public subnet of the VPC"
