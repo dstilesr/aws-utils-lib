@@ -1,0 +1,10 @@
+Resources:
+  StackVPC:
+    Type: "AWS::EC2::VPC"
+    CidrBlock: 10.0.0.0/16
+    EnableDnsSupport: "false"
+    Tags:
+      - Key: Name
+        Value: StackVPC
+      - Key: Description
+        Value: "VPC created by CloudFormation stack"
