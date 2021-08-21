@@ -58,7 +58,7 @@ Resources:
   PublicACL:
     Type: "AWS::EC2::NetworkAcl"
     Properties:
-      VpcId: !Ref StackVpc
+      VpcId: !Ref StackVPC
       Tags:
         - Key: Name
           Value: PublicACL
@@ -93,13 +93,13 @@ Resources:
 
   PublicOutboundRule:
     Type: "AWS::EC2::NetworkAclEntry"
-      Properties:
-        NetworkAclId: !Ref PublicACL
-        RuleNumber: 200
-        Protocol: -1
-        RuleAction: allow
-        Egress: true
-        CidrBlock: 0.0.0.0/0
+    Properties:
+      NetworkAclId: !Ref PublicACL
+      RuleNumber: 200
+      Protocol: -1
+      RuleAction: allow
+      Egress: true
+      CidrBlock: 0.0.0.0/0
 
   ############################################################################
   # Private ACL
@@ -108,7 +108,7 @@ Resources:
   PrivateACL:
     Type: "AWS::EC2::NetworkAcl"
     Properties:
-      VpcId: !Ref StackVpc
+      VpcId: !Ref StackVPC
       Tags:
         - Key: Name
           Value: PrivateACL
