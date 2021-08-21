@@ -140,3 +140,23 @@ Resources:
       RuleAction: allow
       Egress: true
       CidrBlock: 0.0.0.0/0
+
+  ############################################################################
+  # Private Route Table
+  ############################################################################
+
+  PrivateRT:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref StackVPC
+      Tags:
+        - Key: Name
+          Value: PrivateRT
+        - Key: Description
+          Value: "Route table for the private subnet"
+
+  PrivateRTAssoc:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref PrivateRT
+      SubnetId: !Ref PrivateSubnet
