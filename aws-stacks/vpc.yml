@@ -26,7 +26,7 @@ Resources:
       InternetGatewayId: !Ref StackIG
 
   ############################################################################
-  # Subnets
+  # Subnets and NAT Gateways
   ############################################################################
 
   PublicSubnet:
@@ -50,6 +50,17 @@ Resources:
           Value: PrivateSubnet1
         - Key: Description
           Value: "A private subnet of the VPC"
+
+  NATGW:
+    Type: "AWS::EC2::NatGateway"
+    Properties:
+      SubnetId: !Ref PrivateSubnet
+      ConnectivityType: private
+      Tags:
+        - Key: Name
+          Value: NATGW
+        - Key: Description
+          Value: "NAT Gateway for the private subnet"
 
   ############################################################################
   # Public ACL
@@ -187,3 +198,10 @@ Resources:
     Properties:
       RouteTableId: !Ref PrivateRT
       SubnetId: !Ref PrivateSubnet
+
+  NATOutboundRoute:
+    Type: "AWS::EC2::Route"
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NATGW
+      RouteTableId: !Ref PrivateRT
