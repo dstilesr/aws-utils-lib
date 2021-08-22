@@ -154,3 +154,9 @@ class StackTracker:
         :return: List of strings.
         """
         return [k for k in self.metadata.keys() if self.is_stack_active(k)]
+
+    def clear_metadata(self):
+        """
+        Deletes all stored metadata.
+        """
+        self.metadata = {}

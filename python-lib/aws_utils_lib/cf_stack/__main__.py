@@ -13,5 +13,6 @@ fire.Fire({
     "launch": cli.launch_stack,
     "delete": cli.delete_stack,
     "active-stacks": cli.active_stacks,
-    "set-default-profile": cli.set_default_aws_profile
+    "set-default-profile": cli.set_default_aws_profile,
+    "clear-all-metadata": cli.clear_all_metadata
 })

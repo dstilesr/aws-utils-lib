@@ -50,12 +50,13 @@ def delete_stack(
     print(result)
 
 
-def active_stacks():
+def active_stacks(aws_region: str = "us-west-2"):
     """
     Print List of active stacks.
+    :param aws_region: AWS region to look for stacks in.
     :return:
     """
-    tracker = StackTracker(META_DIR)
+    tracker = StackTracker(META_DIR, aws_region)
     print("Active stacks:")
     for name in tracker.active_stacks():
         print("- %s" % name)
@@ -91,3 +92,12 @@ def set_default_aws_profile(aws_profile: str):
     # Write to env file
     with open(ENV_PATH, "w") as f:
         f.write(new_text)
+
+
+def clear_all_metadata():
+    """
+    Clear all stored metadata.
+    :return:
+    """
+    tracker = StackTracker(META_DIR)
+    tracker.clear_metadata()
