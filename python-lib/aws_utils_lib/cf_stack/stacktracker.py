@@ -12,9 +12,14 @@ class StackTracker:
 
     The metadata file contains a JSON object whose keys are the names of the
     stacks and each is associated with a dictionary that has the following
-    values:
-    - is_active: Boolean
-    - last_launched: Datetime in DATETIME_FMT format
+    structure:
+    - region1
+        - is_active: Boolean
+        - last_launched: Datetime in DATETIME_FMT format
+    - region2
+        - is_active
+        -last_launched
+    ...
 
     Methods
     -------
@@ -26,10 +31,11 @@ class StackTracker:
     DATETIME_FMT: str = "%Y-%m-%d %H:%M:%S"  #: Format for datetime metadata
     META_FILE: str = "stacks-metadata.json"  #: Name of metadata file
 
-    def __init__(self, meta_dir: str):
+    def __init__(self, meta_dir: str, aws_region: str = "us-west-2"):
         """
         :param meta_dir: Directory where metadata is stored.
         """
+        self.__aws_region = aws_region
         if not os.path.isdir(meta_dir):
             raise FileNotFoundError("Metadata directory not found.")
         self.__meta_dir = meta_dir
@@ -38,6 +44,13 @@ class StackTracker:
             self.__metadata = self._load_metadata()
         else:
             self.__metadata = {}
+
+    @property
+    def aws_region(self) -> str:
+        """
+        AWS Region that is currently being tracked.
+        """
+        return self.__aws_region
 
     @property
     def meta_dir(self) -> str:
