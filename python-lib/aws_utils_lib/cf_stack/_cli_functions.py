@@ -1,5 +1,6 @@
 import os
 import re
+from pprint import pprint
 from typing import Optional
 
 # From package
@@ -101,3 +102,12 @@ def clear_all_metadata():
     """
     tracker = StackTracker(META_DIR)
     tracker.clear_metadata()
+
+
+def print_metadata():
+    """
+    Print stored metadata.
+    :return:
+    """
+    tracker = StackTracker(META_DIR)
+    pprint(tracker.metadata)
