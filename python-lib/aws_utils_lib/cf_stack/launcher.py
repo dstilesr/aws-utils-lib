@@ -31,7 +31,7 @@ class StackLauncher:
             profile_name=aws_profile,
             region_name=aws_region
         )
-        self.tracker = StackTracker(META_DIR)
+        self.tracker = StackTracker(META_DIR, aws_region)
 
     @property
     def stack_name(self) -> str:
