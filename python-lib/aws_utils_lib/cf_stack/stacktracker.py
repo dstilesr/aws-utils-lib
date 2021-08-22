@@ -99,11 +99,12 @@ class StackTracker:
         :return: Stack's metadata. Returns empty dictionary if no metadata is
             currently stored for this stack.
         """
-        return self.metadata.get(stack_name, {})
+        return self.metadata.get(stack_name, {}).get(self.aws_region, {})
 
     def is_stack_active(self, stack_name: str) -> bool:
         """
-        Tells whether the given stack is currently active / running.
+        Tells whether the given stack is currently active / running in the
+        given region.
         :param stack_name: Name of stack.
         :return: Boolean
         """
@@ -113,10 +114,15 @@ class StackTracker:
         """
         Update a stack's metadata.
         :param stack_name:
-        :param new_data: New metadata dictionary.
+        :param new_data: New metadata dictionary corresponding to the given
+            stack and the aws region set in `__init__`.
         """
         meta = self.metadata
-        meta[stack_name] = new_data
+
+        stack_meta = meta.get(stack_name, {})
+        stack_meta[self.aws_region] = new_data
+        meta[stack_name] = stack_meta
+
         self.metadata = meta
 
     def log_stack_launch(self, stack_name: str):
@@ -144,7 +150,7 @@ class StackTracker:
 
     def active_stacks(self) -> List[str]:
         """
-        Get the list of names of currently active stacks.
+        Get the list of names of currently active stacks in the given region.
         :return: List of strings.
         """
         return [k for k in self.metadata.keys() if self.is_stack_active(k)]
