@@ -155,7 +155,18 @@ class StackTracker:
         """
         return [k for k in self.metadata.keys() if self.is_stack_active(k)]
 
-    def clear_metadata(self):
+    def clear_region_metadata(self):
+        """
+        Clear all metadata associated with the current region.
+        """
+        meta = self.metadata
+        for stack_name in meta.keys():
+            if self.aws_region in meta[stack_name].keys():
+                meta[stack_name].pop(self.aws_region)
+
+        self.metadata = meta
+
+    def clear_all_metadata(self):
         """
         Deletes all stored metadata.
         """

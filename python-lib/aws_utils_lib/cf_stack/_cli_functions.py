@@ -101,7 +101,16 @@ def clear_all_metadata():
     :return:
     """
     tracker = StackTracker(META_DIR)
-    tracker.clear_metadata()
+    tracker.clear_all_metadata()
+
+
+def clear_region_metadata(aws_region: str = "us-west-2"):
+    """
+    Clear all metadata from the given region.
+    :param aws_region: AWS region.
+    """
+    tracker = StackTracker(META_DIR, aws_region)
+    tracker.clear_region_metadata()
 
 
 def print_metadata():
