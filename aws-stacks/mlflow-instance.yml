@@ -108,3 +108,12 @@ Resources:
                 Resource:
                   - !Sub "arn:aws:s3:::${AssetsBucketName}"
                   - !Sub "arn:aws:s3:::${AssetsBucketName}/*"
+
+Outputs:
+  InstanceIP:
+    Description: Public IP of the instance.
+    Value: !GetAtt MLFlowInstance.PublicIp
+
+  InstanceDNS:
+    Description: Public DNS name of the instance
+    Value: !GetAtt MLFlowInstance.PublicDnsName
