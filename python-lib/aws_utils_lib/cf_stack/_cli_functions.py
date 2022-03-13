@@ -120,3 +120,22 @@ def print_metadata():
     """
     tracker = StackTracker(META_DIR)
     pprint(tracker.metadata)
+
+
+def stack_outputs(
+        stack_name: str,
+        aws_profile: Optional[str] = None,
+        aws_region: str = "us-west-2"):
+    """
+    Get the outputs of the given stack (for CLI use).
+    :param stack_name: Name of the stack to describe (Template must be in
+        aws-stacks).
+    :param aws_profile: Profile to use for credentials. Default is
+        DEFAULT_PROFILE (if it has been set) or otherwise "default".
+    :param aws_region: Region where stack is deployed.
+    """
+    if aws_profile is None:
+        aws_profile = os.getenv("DEFAULT_PROFILE", "default")
+
+    launcher = StackLauncher(stack_name, aws_profile, aws_region)
+    return launcher.get_stack_outputs()

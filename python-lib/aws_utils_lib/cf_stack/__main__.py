@@ -16,5 +16,6 @@ fire.Fire({
     "set-default-profile": cli.set_default_aws_profile,
     "clear-all-metadata": cli.clear_all_metadata,
     "clear-region-metadata": cli.clear_region_metadata,
-    "print-metadata": cli.print_metadata
+    "print-metadata": cli.print_metadata,
+    "get-outputs": cli.stack_outputs
 })
