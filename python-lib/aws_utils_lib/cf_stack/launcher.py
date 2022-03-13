@@ -180,3 +180,18 @@ class StackLauncher:
         Tells whether the stack is currently deployed.
         """
         return self.tracker.is_stack_active(self.stack_name)
+
+    def get_stack_outputs(self) -> Dict[str, str]:
+        """
+        Get the outputs for the given stack.
+        :return: ID -> Value mapping.
+        """
+        if not self.is_active():
+            raise ValueError("Stack is not active!")
+
+        cf = self.get_cloudformation_client()
+        result = cf.describe_stacks(StackName=self.stack_name)
+        out = {}
+        for output in result["Stacks"][0].get("Outputs", []):
+            out[output["OutputKey"]] = output["OutputValue"]
+        return out

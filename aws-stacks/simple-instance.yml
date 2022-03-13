@@ -38,3 +38,12 @@ Resources:
       Tags:
         - Key: Name
           Value: SimpleInstanceSG
+
+Outputs:
+  InstanceIP:
+    Description: Public IP of the instance.
+    Value: !GetAtt EC2Instance.PublicIp
+
+  InstanceDNS:
+    Description: Public DNS name of the instance
+    Value: !GetAtt EC2Instance.PublicDnsName
