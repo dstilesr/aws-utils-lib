@@ -42,7 +42,7 @@ class StackTracker:
             meta_dir = Path(meta_dir)
 
         self.__aws_region = aws_region
-        if meta_dir.is_dir():
+        if not meta_dir.is_dir():
             raise FileNotFoundError("Metadata directory not found.")
         self.__meta_dir = meta_dir
 
