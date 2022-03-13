@@ -1,7 +1,8 @@
 import os
 import json
-from typing import Dict, List
+from pathlib import Path
 from datetime import datetime
+from typing import Dict, List, Union
 
 
 class StackTracker:
@@ -31,16 +32,22 @@ class StackTracker:
     DATETIME_FMT: str = "%Y-%m-%d %H:%M:%S"  #: Format for datetime metadata
     META_FILE: str = "stacks-metadata.json"  #: Name of metadata file
 
-    def __init__(self, meta_dir: str, aws_region: str = "us-west-2"):
+    def __init__(
+            self,
+            meta_dir: Union[str, Path],
+            aws_region: str = "us-west-2"):
         """
         :param meta_dir: Directory where metadata is stored.
         """
+        if not isinstance(meta_dir, Path):
+            meta_dir = Path(meta_dir)
+
         self.__aws_region = aws_region
-        if not os.path.isdir(meta_dir):
+        if meta_dir.is_dir():
             raise FileNotFoundError("Metadata directory not found.")
         self.__meta_dir = meta_dir
 
-        if os.path.isfile(self.meta_file):
+        if self.meta_file.is_file():
             self.__metadata = self._load_metadata()
         else:
             self.__metadata = {}
@@ -53,18 +60,18 @@ class StackTracker:
         return self.__aws_region
 
     @property
-    def meta_dir(self) -> str:
+    def meta_dir(self) -> Path:
         """
         Metadata directory (Read-only).
         """
         return self.__meta_dir
 
     @property
-    def meta_file(self) -> str:
+    def meta_file(self) -> Path:
         """
         Metadata filename (Read-only)
         """
-        return os.path.join(self.__meta_dir, self.META_FILE)
+        return self.__meta_dir / self.META_FILE
 
     @property
     def metadata(self) -> Dict[str, Dict]:
@@ -79,7 +86,7 @@ class StackTracker:
         Setter for metadata dictionary. Saves the metadata to file when set.
         :param metadata: New metadata dictionary.
         """
-        with open(self.meta_file, "w") as f:
+        with self.meta_file.open("w") as f:
             json.dump(metadata, f)
         self.__metadata = metadata
 
@@ -88,7 +95,7 @@ class StackTracker:
         Load the metadata from the json file.
         :return: Metadata dictionary.
         """
-        with open(self.meta_file, "r") as f:
+        with self.meta_file.open("r") as f:
             meta = json.load(f)
         return meta
 

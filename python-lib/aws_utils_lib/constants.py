@@ -1,10 +1,7 @@
-import os
+from pathlib import Path
 
 """Directory to store package metadata."""
-META_DIR: str = os.path.join(
-    os.path.expanduser("~"),
-    ".ds-utils-data"
-)
+META_DIR: Path = Path.home() / ".ds-utils-data"
 
 """Path to library's .env file."""
-ENV_PATH: str = os.path.join(META_DIR, ".env")
+ENV_PATH: Path = META_DIR / ".env"
