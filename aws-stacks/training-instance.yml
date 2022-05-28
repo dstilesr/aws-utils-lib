@@ -13,7 +13,12 @@ Parameters:
   InstanceTypeParameter:
     Type: String
     Description: Type of instance to use
-    Default: p2.xlarge
+    Default: g3.4xlarge
+
+  InstanceAMIParameter:
+    Type: String
+    Description: AMI for EC2 instance
+    Default: ami-0dc6e892f9ade5942
 
 Resources:
   StorageBucket:
@@ -102,7 +107,7 @@ Resources:
         KeyName: !Ref KeyNameParameter
         IamInstanceProfile:
           Arn: !GetAtt InstanceProfile.Arn
-        ImageId: "ami-0a20a878a1c1e5477"
+        ImageId: !Ref InstanceAMIParameter
         InstanceType: !Ref InstanceTypeParameter
         SecurityGroups:
           - !Ref InstanceSG
@@ -120,3 +125,7 @@ Outputs:
   InstanceDNS:
     Description: Public DNS name of the instance
     Value: !GetAtt EC2Instance.PublicDnsName
+
+  BucketName:
+    Description: Name of S3 bucket in the stack
+    Value: !Ref StorageBucket

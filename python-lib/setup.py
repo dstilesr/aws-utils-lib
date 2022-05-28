@@ -6,7 +6,7 @@ setup(
     description="A utilities library to interact with aws",
     author="David Stiles Rosselli",
     install_requires=[
-        "boto3",
+        "boto3>=1.0.0,<2.0.0",
         "fire<1.0.0",
         "python-dotenv"
     ],
