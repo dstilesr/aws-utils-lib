@@ -15,6 +15,11 @@ Parameters:
     Description: Type of instance to use
     Default: p2.xlarge
 
+  InstanceAMIParameter:
+    Type: String
+    Description: AMI for EC2 instance
+    Default: ami-0dc6e892f9ade5942
+
 Resources:
   StorageBucket:
     Type: "AWS::S3::Bucket"
@@ -102,7 +107,7 @@ Resources:
         KeyName: !Ref KeyNameParameter
         IamInstanceProfile:
           Arn: !GetAtt InstanceProfile.Arn
-        ImageId: "ami-0a20a878a1c1e5477"
+        ImageId: !Ref InstanceAMIParameter
         InstanceType: !Ref InstanceTypeParameter
         SecurityGroups:
           - !Ref InstanceSG
