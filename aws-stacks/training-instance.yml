@@ -13,7 +13,7 @@ Parameters:
   InstanceTypeParameter:
     Type: String
     Description: Type of instance to use
-    Default: p2.xlarge
+    Default: g3.4xlarge
 
   InstanceAMIParameter:
     Type: String
